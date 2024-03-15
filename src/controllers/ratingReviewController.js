@@ -36,7 +36,50 @@ const updateReview = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+const deleteReview = async (req, res) => {
+    try {
+      
+      const { movieId, reviewId } = req.params;
+      const userId = req.user.id;
+      const deletedReview = await ratingReviewService.deleteReview(userId, movieId,reviewId);
+      
+      if (!deletedReview) {
+        res.status(404).json({ message: "Review not found" });
+      }
+      res.status(204).send();
+    } catch (error) {
+      res.status(500).json({ message: error.message });
+    }
+  };
+
+  const listReviews = async (req, res) => {
+    try {
+     let {id} =req.params;
+      const reviews = await ratingReviewService.listReviews(id);
+      if (!reviews) {
+        res.status(404).json({ message: "Review not found" });
+      }
+      res.status(200).json(reviews);
+    } catch (error) {
+      res.status(500).json({ message: error.message });
+    }
+  };
+  const averageRating = async (req, res) => {
+    try {
+     let {id} =req.params;
+      const averageRating = await ratingReviewService.averageRating(id);
+      if (!averageRating) {
+        res.status(404).json({ message: "Review not found" });
+      }
+      res.status(200).json(averageRating);
+    } catch (error) {
+      res.status(500).json({ message: error.message });
+    }
+  };
 module.exports = {
   addReview,
   updateReview,
+  deleteReview,
+  listReviews,
+  averageRating
 };
